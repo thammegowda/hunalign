@@ -1,24 +1,41 @@
 cmake_minimum_required(VERSION 3.10)
 
+
 # Project name
 project(hunalign)
+# Set the C++ standard
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Set the source and include directories
 #set(SOURCE_DIR ${CMAKE_SOURCE_DIR}/src/hunalign)
 set(INCLUDE_DIR ${CMAKE_SOURCE_DIR}/src/include)
 
+
 # Set the C++ compiler
-set(CMAKE_CXX_COMPILER g++)
-# Set the compilation flags
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O9 -ffast-math -funroll-loops")
+if (MSVC)
+    set(CMAKE_CXX_COMPILER cl)
+    # Set the compilation flags for MSVC
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /O2 /fp:fast /arch:AVX2")
+    # 
+    #  fatal  error C1189: #error:  <hash_map> is deprecated and will be REMOVED.
+    add_definitions(-D_SILENCE_STDEXT_HASH_DEPRECATION_WARNINGS)
+else()
+    set(CMAKE_CXX_COMPILER g++)
+    # Set the compilation flags for GCC
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O9 -ffast-math -funroll-loops")
+endif()
 
 # Set the include directories
 include_directories(${INCLUDE_DIR})
 
 # Set the libraries to link against
-# Set the external libraries to link against
-#set(LIBS "")
-set(EXT_LIBS -lstdc++)
+if (MSVC)
+    set(EXT_LIBS "")
+else()
+    set(EXT_LIBS -lstdc++)
+endif()
+
 
 
 # Collect all source files
@@ -43,6 +60,7 @@ set(SOURCES
     # new addition to the code
     ${CMAKE_SOURCE_DIR}/src/hunalign/alignerApi.hpp
 )
+
 
 # Add the library
 add_library(hunalign STATIC ${SOURCES})

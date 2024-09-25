@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <filesystem>
 #include <tuple>
 #include "./alignerTool.cpp"
