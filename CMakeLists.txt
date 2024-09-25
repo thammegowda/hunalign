@@ -16,9 +16,9 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O9 -ffast-math -funroll-loops")
 include_directories(${INCLUDE_DIR})
 
 # Set the libraries to link against
-set(LIBS -lstdc++)
 # Set the external libraries to link against
-set(EXT_LIBS "")
+#set(LIBS "")
+set(EXT_LIBS -lstdc++)
 
 
 # Collect all source files
@@ -40,11 +40,13 @@ set(SOURCES
     ${CMAKE_SOURCE_DIR}/src/utils/stringsAndStreams.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/argumentsParser.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/timer.cpp
+    # new addition to the code
+    ${CMAKE_SOURCE_DIR}/src/hunalign/alignerApi.hpp
 )
 
 # Add the library
 add_library(hunalign STATIC ${SOURCES})
-#target_link_libraries(hunalign ${EXT_LIBS})
+target_link_libraries(hunalign ${EXT_LIBS})
 
 # executable: hunalign target is taken by the library,
 # so hunalign_exe is the executable but the output file name should be hunalign instead of hunalign_exe
@@ -52,4 +54,10 @@ add_executable(hunalign_exe ${CMAKE_SOURCE_DIR}/src/hunalign/main.cpp)
 set_property(TARGET hunalign_exe PROPERTY OUTPUT_NAME hunalign)
 
 # Link the library to the executable
-target_link_libraries(hunalign_exe PUBLIC hunalign ${LIBS})
+target_link_libraries(hunalign_exe PUBLIC hunalign ${EXT_LIBS})
+
+
+# this is a test for using the simple API of the aligner
+add_executable(hunalign_api_test ${CMAKE_SOURCE_DIR}/src/hunalign/alignerApiTest.cpp)
+target_link_libraries(hunalign_api_test PUBLIC hunalign ${EXT_LIBS})
+
